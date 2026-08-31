@@ -1,0 +1,8 @@
+{
+  "name": "awy-immersive-poc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWY emotional support experience POC",
+  "scripts": { "dev": "vite", "build": "vite", "preview": "vite preview" },
+  "devDependencies": { "vite": "^7.0.0" }
+}
