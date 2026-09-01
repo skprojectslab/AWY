@@ -3,14 +3,12 @@
   "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "Always With You \u2014 AI emotional support POC",
+  "description": "Always With You — AI emotional support companion",
   "scripts": {
-    "dev": "netlify dev",
-    "deploy": "netlify deploy",
-    "deploy:prod": "netlify deploy --prod"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
-  "dependencies": {},
   "devDependencies": {
-    "netlify-cli": "^23.0.0"
+    "wrangler": "^4.0.0"
   }
 }
