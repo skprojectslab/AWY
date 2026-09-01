@@ -1,23 +1,11 @@
-# AWY — Immersive POC
+# AWY V2 — Always With You
 
-## What this is
-A multi-file front-end POC designed to feel more like a calming experience than a chatbot.
+Static POC. Open index.html locally or deploy directly to Netlify.
 
-## Easiest test
-Open `index.html` directly in Chrome/Edge. No installation is required.
+Features: personalization, light/dark mode, image-based emotions, deep conversation, listening, voice input, breathing, game, grounding, walk prompt, generated calming sound, satisfaction loop, and safety path.
 
-## If someone wants to run it as a web project
-1. Install Node.js
-2. Run `npm install`
-3. Run `npm run dev`
+No backend or real AI API is included yet. The POC uses browser-side rule-based responses and is ready for an AI API integration later.
 
-For Sunny's office-laptop testing, direct opening of `index.html` is enough.
 
-## Files
-- `index.html` — app shell
-- `src/style.css` — visual design
-- `src/app.js` — interaction logic
-- `assets/` — reserved for future images/audio
-- `package.json` — project package configuration
-
-No paid services, API keys, music licenses or external accounts are required for this POC.
+## AWY V2.1 visual update
+This version uses proper pastel emotion illustrations instead of generic SVG face icons.
