@@ -1,1 +1,22 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AWY — Always With You</title><link rel="stylesheet" href="src/style.css"></head><body><div id="app"></div><script src="src/app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fffaf5" />
+  <title>Always With You</title>
+  <link rel="stylesheet" href="src/style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <button id="backBtn" class="icon-btn hidden" aria-label="Go back">←</button>
+      <div class="brand"><span class="brand-dot"></span><span>always with you</span></div>
+      <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">☼</button>
+    </header>
+    <section id="app" class="screen"></section>
+  </main>
+  <div id="toast" class="toast hidden"></div>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

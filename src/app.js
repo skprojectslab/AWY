@@ -1,1 +1,126 @@
-const app=document.querySelector("#app"),S={name:localStorage.awy_name||"",emotion:"",step:0,answers:[]};const E=[["sad","Sad","Feeling low or heavy"],["anxious","Anxious","Worried or nervous"],["overthinking","Overthinking","My mind won't slow down"],["overwhelmed","Overwhelmed","Too much at once"],["doubting","Doubting myself","Not sure I can do it"],["hurt","Hurt","Something affected me"],["exhausted","Exhausted","No energy"],["angry","Angry","Something is bothering me"],["unsure","I'm not sure","I can't name it yet"]];const Q={sad:["Has something happened recently?","Would talking about it help, or do you need comfort first?"],anxious:["Is there one thing worrying you, or does everything feel worrying?","Would calming your body first help?"],overthinking:["Is your mind stuck on the past, future, or a decision?","Want to untangle one thought together?"],overwhelmed:["Too many tasks, too many feelings, or both?","What feels heaviest right now?"],doubting:["What are you doubting — yourself, a decision, or a goal?","What is the fear behind the doubt?"],hurt:["Was it something someone did, something you lost, or something you expected?","What part hurts most?"],exhausted:["Physical tiredness, emotional tiredness, or both?","Would a tiny reset help first?"],angry:["Are you angry at someone, a situation, or yourself?","What do you wish had been different?"],unsure:["That's okay. Feelings sometimes arrive before their names.","If your feeling were weather, what would it be?"]};function sh(x){app.innerHTML=`<div class="shell"><div class="top"><div class="brand"><div class="logo">🤍</div>AWY</div><button class="icon" onclick="document.body.classList.toggle('dark')">◐</button></div>${x}</div>`}function welcome(){sh(`<div class="hero"><div class="orb"></div><h1>A little better, right now.</h1><p>You don't have to have the right words. We'll take one small step at a time.</p></div><div class="card question"><h2>What should I call you?</h2><p>Optional. AWY can still be here without your name.</p><input id="n" placeholder="Your name" value="${S.name}"><select id="a"><option>Age bracket (optional)</option><option>Under 18</option><option>18–24</option><option>25–34</option><option>35–44</option><option>45–54</option><option>55+</option></select><div class="actions"><button class="primary" onclick="S.name=n.value.trim();localStorage.awy_name=S.name;home()">Let's begin →</button></div></div>`)}function home(){sh(`<div class="hero"><div class="orb"></div><h1>${S.name?"Hi "+S.name+".":"Hey."} I'm here.</h1><p>You don't need to write a long message. Choose what feels closest.</p></div><div class="card"><div class="question"><h2>How are you feeling?</h2><p>There is no wrong answer.</p></div><div class="grid">${E.map(e=>`<button class="choice" onclick="S.emotion='${e[0]}';need()"><img src="assets/emotions/${e[0]}.png"><strong>${e[1]}</strong><span>${e[2]}</span></button>`).join("")}</div></div>`)}function need(){sh(`<div class="hero"><div class="orb"></div><h1>What do you need from me right now?</h1><p>You choose the pace.</p></div><div class="card"><div class="grid"><button class="choice" onclick="company()"><strong>🤍 Just be with me</strong><span>No fixing. Just stay with me.</span></button><button class="choice" onclick="listen()"><strong>👂 Listen to me</strong><span>I want to talk.</span></button><button class="choice" onclick="activities()"><strong>🫁 Help me feel better now</strong><span>Give me something to do.</span></button><button class="choice" onclick="deep()"><strong>🧠 Help me understand this</strong><span>Help me make sense of it.</span></button><button class="choice" onclick="deep()"><strong>🎯 Help me figure out what to do</strong><span>Help me move forward.</span></button><button class="choice" onclick="safety()"><strong>🆘 I might be in danger</strong><span>I need urgent support.</span></button></div><div class="actions"><button class="secondary" onclick="home()">← Back</button></div></div>`)}function company(){sh(`<div class="card question"><div class="orb"></div><h2>I'm here.</h2><div class="bubble">You don't have to make this useful or productive. We can just sit in this moment together.<br><br>Sometimes the bravest thing is not solving everything before lunch. 🌿</div><div class="pills"><button class="pill" onclick="listen()">Stay and talk</button><button class="pill" onclick="activities()">Do something calming</button><button class="pill" onclick="sound()">Quiet minute</button></div></div>`)}function listen(){sh(`<div class="card"><div class="bubble">I'm listening. Take your time. Your message can be messy, incomplete, or just one sentence.</div><div id="log"></div><div class="chatrow"><textarea id="m" placeholder="Write as little or as much as you want…"></textarea><button class="mic" onclick="voice()">🎙️</button><button class="primary" onclick="send()">Send</button></div><p>Voice input works in supported browsers such as Chrome.</p></div>`)}function send(){let t=m.value.trim();if(!t)return;log.innerHTML+=`<div class="bubble user">${t}</div>`;m.value="";let r=/kill myself|suicide|harm myself|want to die|end my life/i.test(t)?"I'm really glad you told me. I want to take this seriously and help you connect to immediate real-world support.":/fail|money|waste/i.test(t)?"That fear makes sense. Instead of asking whether you should go all in, we can ask: what is the smallest, safest test?":"Thank you for telling me. I'm hearing you. What part of this feels most important right now?";log.innerHTML+=`<div class="bubble">${r}</div>`;if(/kill myself|suicide|harm myself|want to die|end my life/i.test(t))setTimeout(safety,600)}function voice(){let R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return alert("Voice input is not supported here. Try Chrome.");let r=new R();r.lang="en-IN";r.onresult=e=>m.value+=e.results[0][0].transcript;r.start()}function deep(){let qs=Q[S.emotion]||Q.unsure,q=qs[Math.min(S.step,1)];sh(`<div class="card question"><div class="orb"></div><h2>${q}</h2><p>Choose one, or tell me your own words.</p><div class="pills"><button class="pill" onclick="ans('A specific situation')">A specific situation</button><button class="pill" onclick="ans('Something I want to achieve')">Something I want to achieve</button><button class="pill" onclick="ans('A relationship')">A relationship</button><button class="pill" onclick="ans('I cannot explain it')">I can't explain it</button></div><textarea id="own" placeholder="Or write your answer…"></textarea><div class="actions"><button class="primary" onclick="ans(own.value)">Continue →</button></div></div>`)}function ans(x){S.answers.push(x||"I don't know");S.step++;if(S.step<2)deep();else hub()}function hub(){sh(`<div class="card question"><div class="orb"></div><h2>Okay. Let's work with this.</h2><p>We don't need a perfect answer. We need a useful next step.</p><div class="mini"><button class="activity" onclick="plan()"><b>🌱 One small step</b>Make it manageable.</button><button class="activity" onclick="activities()"><b>🫁 Reset first</b>Calm or distract your mind.</button><button class="activity" onclick="perspective()"><b>💡 Perspective</b>A little motivation.</button></div><div class="actions"><button class="primary" onclick="satisfied()">I'm okay for now</button><button class="secondary" onclick="S.step=0;deep()">Keep exploring →</button></div></div>`)}function plan(){sh(`<div class="card"><h2>Let's make it smaller.</h2><div class="bubble"><b>1.</b> Name what you are trying to protect.<br><b>2.</b> Find the smallest test or action.<br><b>3.</b> Set a limit on time, money, or effort.<br><b>4.</b> Learn before committing more.</div><div class="bubble">Instead of “Will I succeed?”, ask: “What can I test this week with an amount I can safely afford to lose?”</div><div class="actions"><button class="primary" onclick="satisfied()">That helps</button><button class="secondary" onclick="S.step=0;deep()">Go deeper</button></div></div>`)}function perspective(){sh(`<div class="card question"><div class="orb"></div><h2>You don't need certainty to begin.</h2><p>Many successful people moved forward before they felt ready. The goal isn't to pretend fear doesn't exist. It's to stop letting fear make every decision.</p><div class="bubble">Try asking: <b>If I fail, what will I learn? If I don't try, what might I keep wondering?</b></div><div class="actions"><button class="primary" onclick="hub()">Help me choose a step</button><button class="secondary" onclick="activities()">Mental break</button></div></div>`)}function activities(){sh(`<div class="card question"><h2>Let's do something for a minute.</h2><p>You don't always have to think your way out of a feeling.</p><div class="mini"><button class="activity" onclick="breathe()"><b>🫁 Breathe with me</b>Slow down your body.</button><button class="activity" onclick="game()"><b>🎮 Tiny mind game</b>Give your brain a break.</button><button class="activity" onclick="ground()"><b>🌿 5–4–3–2–1</b>Come back to now.</button><button class="activity" onclick="sound()"><b>🎵 Calming sound</b>Soft generated tone.</button><button class="activity" onclick="walk()"><b>🚶 Move a little</b>Take a tiny walk.</button><button class="activity" onclick="listen()"><b>💬 Talk instead</b>Maybe that's what you need.</button></div></div>`)}function breathe(){sh(`<div class="card question"><h2>Take a breath with me</h2><p id="bt">Breathe in… slowly.</p><div class="breath">Breathe<br>with AWY</div><p>Follow the circle. In → hold → out.</p><button class="primary" onclick="activities()">Done</button></div>`);let a=["Breathe in… slowly.","Hold… you're doing fine.","Breathe out… let your shoulders drop."],i=0;setInterval(()=>{i=(i+1)%3;if(bt)bt.textContent=a[i]},2600)}let hits=0;function game(){hits=0;sh(`<div class="card question"><h2>Catch the calm</h2><p>Tap all 9 circles. Your overthinking brain doesn't get a meeting invite for 30 seconds. 🙂</p><div class="progress"><i id="bar"></i></div><div class="targets">${Array(9).fill(0).map(()=>`<button class="target" onclick="hit(this)">✦</button>`).join("")}</div><p id="sc">0 / 9</p></div>`)}function hit(x){x.style.visibility="hidden";hits++;sc.textContent=hits+" / 9";bar.style.width=hits/9*100+"%";if(hits==9)setTimeout(()=>{alert("Nice. Tiny reset complete. 🌿");activities()},300)}function ground(){sh(`<div class="card question"><h2>Come back to this room</h2><div class="bubble"><b>5</b> things you can see<br><b>4</b> things you can feel<br><b>3</b> things you can hear<br><b>2</b> things you can smell<br><b>1</b> thing you appreciate right now</div><button class="primary" onclick="satisfied()">I did it</button></div>`)}function walk(){sh(`<div class="card question"><h2>Just a 5-minute walk?</h2><p>No productivity. No podcast required. Just move and notice three things you've never paid attention to before.</p><button class="primary" onclick="satisfied()">I'll try it</button></div>`)}let ac,o;function sound(){sh(`<div class="card question"><div class="orb"></div><h2>A quiet minute</h2><p>Tap play for a gentle ambient tone.</p><div class="actions"><button class="primary" onclick="play()">▶ Play calming sound</button><button class="secondary" onclick="satisfied()">Continue</button></div><p>The sound is generated in your browser.</p></div>`)}function play(){if(o){o.stop();o=null;return}ac=new (AudioContext||webkitAudioContext)();o=ac.createOscillator();let g=ac.createGain();o.frequency.value=174;o.type="sine";g.gain.value=.025;o.connect(g);g.connect(ac.destination);o.start();setTimeout(()=>{if(o){o.stop();o=null}},60000)}function safety(){sh(`<div class="card safety"><div class="question"><h2>You don't have to handle this alone.</h2><p>If you may hurt yourself, someone else, or are in immediate danger, please move toward real-world help now.</p></div><div class="bubble"><b>Right now:</b><br>• Contact your local emergency service or go to the nearest emergency department.<br>• Tell a trusted person nearby: “I don't feel safe being alone right now.”<br>• Stay with another person if possible and move away from anything you could use to hurt yourself.</div><p>AWY is not an emergency service and cannot contact emergency services for you.</p><div class="actions"><button class="primary" onclick="home()">I'm safe enough to continue</button></div></div>`)}function satisfied(){sh(`<div class="card question"><div class="orb"></div><h2>How do you feel now?</h2><p>Even a little better matters.</p><div class="grid"><button class="choice" onclick="S.step=0;deep()"><strong>😔 Still struggling</strong><span>Stay with me longer.</span></button><button class="choice" onclick="S.step=0;deep()"><strong>🙂 A little better</strong><span>We can keep going.</span></button><button class="choice" onclick="finish()"><strong>😊 Much better</strong><span>Return anytime.</span></button></div><div class="actions"><button class="secondary" onclick="S.step=0;deep()">I want to continue talking →</button></div></div>`)}function finish(){sh(`<div class="card question"><div class="orb"></div><h2>I'm glad you stayed.</h2><p>You don't have to feel amazing for this to count. A little better is still better.</p><div class="bubble">Whenever you need a pause, a thought, a tiny game, a plan, or simply someone to stay with you… <b>AWY is here.</b> 🤍</div><button class="primary" onclick="home()">Return to AWY</button></div>`)}welcome();
+const $ = (s) => document.querySelector(s);
+const app = $("#app");
+const backBtn = $("#backBtn");
+const themeBtn = $("#themeBtn");
+const toast = $("#toast");
+
+const state = {
+  history: [],
+  profile: JSON.parse(localStorage.getItem("awy_profile") || "{}"),
+  messages: JSON.parse(localStorage.getItem("awy_messages") || "[]"),
+  sound: JSON.parse(localStorage.getItem("awy_sound") || "true"),
+  screen: "welcome"
+};
+
+function save(){ localStorage.setItem("awy_profile", JSON.stringify(state.profile)); localStorage.setItem("awy_messages", JSON.stringify(state.messages)); localStorage.setItem("awy_sound", JSON.stringify(state.sound)); }
+function esc(s=""){ return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])); }
+function showToast(msg){ toast.textContent=msg; toast.classList.remove("hidden"); setTimeout(()=>toast.classList.add("hidden"),2200); }
+function beep(freq=520,duration=.08){ if(!state.sound || !window.AudioContext) return; try{ const c=new AudioContext(), o=c.createOscillator(), g=c.createGain(); o.frequency.value=freq; g.gain.value=.04; o.connect(g); g.connect(c.destination); o.start(); g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration); o.stop(c.currentTime+duration); }catch(e){} }
+function speak(text){ if(!state.sound || !("speechSynthesis" in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text.replace(/[*_#]/g,"")); u.rate=.98; u.pitch=1.05; speechSynthesis.speak(u); }
+function render(html, screen, push=true){ if(push && state.screen && state.screen!==screen) state.history.push(state.screen); state.screen=screen; app.innerHTML=html; backBtn.classList.toggle("hidden", state.history.length===0); window.scrollTo({top:0,behavior:"smooth"}); }
+function goBack(){ const prev=state.history.pop(); if(prev) navigate(prev,false); }
+backBtn.onclick=goBack;
+themeBtn.onclick=()=>{ document.body.classList.toggle("dark"); localStorage.setItem("awy_theme",document.body.classList.contains("dark")?"dark":"light"); };
+if(localStorage.getItem("awy_theme")==="dark") document.body.classList.add("dark");
+
+const emotions = [
+ ["Sad","assets/emotions/sad.svg","I feel low or heavy"],
+ ["Anxious","assets/emotions/anxious.svg","My mind or body feels on edge"],
+ ["Overthinking","assets/emotions/overthinking.svg","I cannot stop thinking"],
+ ["Overwhelmed","assets/emotions/overwhelmed.svg","Everything feels like too much"],
+ ["Doubting myself","assets/emotions/doubting.svg","I am questioning myself"],
+ ["Hurt","assets/emotions/hurt.svg","Something has affected me deeply"],
+ ["Exhausted","assets/emotions/exhausted.svg","I have very little left"],
+ ["Angry","assets/emotions/angry.svg","Something is making me angry"],
+ ["I'm not sure","assets/emotions/unsure.svg","I just know I need someone"]
+];
+
+function welcome(){
+  const name = state.profile.name ? `Hi ${esc(state.profile.name)}.` : "Hi.";
+  render(`<div class="hero"><div class="orb"></div><h1>${name}<br>I'm here with you.</h1><p class="sub">You do not have to explain everything perfectly. Start wherever you are.</p></div>
+  <div class="card"><h2>What do you need from me right now?</h2><div class="grid" id="needs">
+  ${[
+  ["🤍","Just be with me","Stay with me while I talk"],
+  ["👂","Listen to me","I want to get something out"],
+  ["🫁","Help me feel better now","I need to calm down"],
+  ["🧠","Help me understand this","Help me make sense of it"],
+  ["🎯","Help me figure out what to do","I need a next step"]
+  ].map((x,i)=>`<button class="choice" data-need="${i}"><strong>${x[0]} ${x[1]}</strong><span>${x[2]}</span></button>`).join("")}</div></div>
+  <div class="row"><button class="btn secondary" id="profileBtn">Personalise AWY</button><button class="btn ghost" id="settingsBtn">Sound & settings</button></div>`, "welcome");
+  document.querySelectorAll("[data-need]").forEach(b=>b.onclick=()=>startNeed(Number(b.dataset.need)));
+  $("#profileBtn").onclick=profile;
+  $("#settingsBtn").onclick=settings;
+}
+function profile(){
+ render(`<div class="card"><h2>Let's make this feel a little more personal</h2><p class="sub">Only share what you are comfortable sharing. You can skip anything.</p><div class="profile">
+ <label>Name (optional)<input id="name" class="input" placeholder="What should I call you?" value="${esc(state.profile.name||"")}"></label>
+ <div><div class="meta">Gender (optional)</div><div class="chips">${["Woman","Man","Non-binary","Prefer not to say"].map(x=>`<button class="chip gender" data-v="${x}">${x}</button>`).join("")}</div></div>
+ <div><div class="meta">Age range (optional)</div><div class="age-grid">${["Under 18","18–24","25–34","35–44","45–54","55+"].map(x=>`<button class="chip age" data-v="${x}">${x}</button>`).join("")}</div></div>
+ <div class="row"><button class="btn" id="saveProfile">Continue</button><button class="btn ghost" id="skipProfile">Skip</button></div></div></div>`,"profile");
+ let gender=state.profile.gender||"",age=state.profile.age||"";
+ document.querySelectorAll(".gender").forEach(b=>b.onclick=()=>{gender=b.dataset.v;document.querySelectorAll(".gender").forEach(x=>x.classList.toggle("active",x===b));});
+ document.querySelectorAll(".age").forEach(b=>b.onclick=()=>{age=b.dataset.v;document.querySelectorAll(".age").forEach(x=>x.classList.toggle("active",x===b));});
+ $("#saveProfile").onclick=()=>{state.profile={name:$("#name").value.trim(),gender,age};save();welcome();};
+ $("#skipProfile").onclick=welcome;
+}
+function settings(){
+ render(`<div class="card"><h2>Settings</h2><div class="sound-row"><div><strong>Sound and voice</strong><div class="meta">Soft interaction sounds and spoken replies</div></div><input class="switch" type="checkbox" id="soundToggle" ${state.sound?"checked":""}></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><button class="btn ghost" id="clearChat">Clear this conversation</button></div>`,"settings");
+ $("#soundToggle").onchange=e=>{state.sound=e.target.checked;save();beep();};
+ $("#clearChat").onclick=()=>{state.messages=[];save();showToast("Conversation cleared");};
+}
+function startNeed(i){
+ const map=["Just be with me","Listen to me","Help me feel better now","Help me understand this","Help me figure out what to do"];
+ state.messages.push({role:"user",content:map[i]}); save(); chat();
+}
+function chat(){
+ const name=state.profile.name?`, ${esc(state.profile.name)}`:"";
+ render(`<div class="card"><div class="orb small"></div><h2>I'm here${name}</h2><p class="meta">You can type, use the microphone, choose a quick option, or simply say what is on your mind.</p></div>
+ <div id="safetyBox"></div><div class="chat" id="chat"></div>
+ <div class="composer"><div class="chips" id="chips"><button class="chip">Go deeper</button><button class="chip">I don't feel understood</button><button class="chip">Give me a small step</button><button class="chip">Start over</button></div><div class="composer-row"><button class="mic" id="micBtn" title="Voice input">🎙</button><input id="msg" class="input" placeholder="Write in your own words…" autocomplete="off"><button class="btn send" id="sendBtn">Send</button></div></div>`,"chat");
+ drawMessages();
+ $("#sendBtn").onclick=sendMessage;
+ $("#msg").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage();});
+ $("#chips").onclick=e=>{if(!e.target.classList.contains("chip"))return; const t=e.target.textContent; if(t==="Start over"){state.messages=[];save();welcome();return;} sendMessage(t);};
+ setupVoice();
+ if(state.messages.length===1) sendAI();
+}
+function drawMessages(){
+ const c=$("#chat"); c.innerHTML="";
+ state.messages.forEach(m=>{ const d=document.createElement("div"); d.className="bubble "+(m.role==="user"?"user":"bot"); d.textContent=m.content; c.appendChild(d); });
+ c.scrollTop=c.scrollHeight;
+}
+async function sendMessage(forced){
+ const input=$("#msg"); const text=(forced||input.value).trim(); if(!text)return; input.value="";
+ state.messages.push({role:"user",content:text}); save(); beep(600); drawMessages();
+ if(isCrisis(text)){showSafety(text); return;}
+ await sendAI();
+}
+function isCrisis(t){return /\b(kill myself|suicide|end my life|want to die|hurt myself|harm myself|can't stay safe)\b/i.test(t);}
+function showSafety(){
+ $("#safetyBox").innerHTML=`<div class="safety"><strong>I'm really glad you told me.</strong><p>If you might hurt yourself or are in immediate danger, please move toward a trusted person or emergency help right now. Do not stay alone. If you can, call your local emergency number or go to the nearest emergency department.</p><p>You can also tell someone nearby: <em>"I don't feel safe being alone right now."</em></p></div>`;
+ state.messages.push({role:"assistant",content:"I’m staying with you here, but I can’t safely handle an immediate crisis alone. Please reach a real person near you now."}); save(); drawMessages(); speak(state.messages.at(-1).content);
+}
+async function sendAI(){
+ const c=$("#chat"), typing=document.createElement("div"); typing.className="typing"; typing.textContent="AWY is thinking…"; c.appendChild(typing);
+ try{
+   const r=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:state.messages,profile:state.profile})});
+   const data=await r.json();
+   if(!r.ok) throw new Error(data.error||"AI request failed");
+   const answer=data.answer||"I'm here. Tell me a little more about that.";
+   state.messages.push({role:"assistant",content:answer}); save(); typing.remove(); drawMessages(); speak(answer);
+ }catch(err){
+   typing.remove();
+   state.messages.push({role:"assistant",content:"I’m having trouble connecting to my AI brain right now. Your message is still here. Please try again in a moment."}); save(); drawMessages();
+   console.error(err);
+ }
+}
+function setupVoice(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){$("#micBtn").onclick=()=>showToast("Voice input is not supported in this browser.");return;}
+ const rec=new SR(); rec.lang="en-IN"; rec.interimResults=false;
+ $("#micBtn").onclick=()=>{try{rec.start();showToast("Listening…");}catch(e){}};
+ rec.onresult=e=>{$("#msg").value=e.results[0][0].transcript;};
+ rec.onerror=()=>showToast("I couldn't hear that clearly. You can type instead.");
+}
+function navigate(screen,push=false){ if(screen==="welcome")welcome(); else if(screen==="profile")profile(); else if(screen==="settings")settings(); else chat(); }
+navigate("welcome",false);
