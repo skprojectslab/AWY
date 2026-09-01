@@ -103,7 +103,7 @@ function showSafety(){
 async function sendAI(){
  const c=$("#chat"), typing=document.createElement("div"); typing.className="typing"; typing.textContent="AWY is thinking…"; c.appendChild(typing);
  try{
-   const r=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:state.messages,profile:state.profile})});
+   const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:state.messages,profile:state.profile})});
    const data=await r.json();
    if(!r.ok) throw new Error(data.error||"AI request failed");
    const answer=data.answer||"I'm here. Tell me a little more about that.";
